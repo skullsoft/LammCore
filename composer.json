@@ -1,0 +1,31 @@
+{
+    "name": "lamm/lamm-core",
+    "description": "ZF2 Module cdn",
+    "type": "library",
+    "keywords": [
+        "zf2",
+        "zend",
+        "module",
+        "core"
+    ],
+    "homepage": "https://github.com/luismayta/LammCore",
+    "authors": [
+        {
+            "name": "Luis Alberto Mayta Mamani",
+            "email": "slovacus@gmail.com",
+            "homepage": ""
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "LammCore": "src/"
+        },
+        "classmap": [
+            "./"
+        ]
+    }
+}
