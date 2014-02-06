@@ -1,6 +1,6 @@
 {
     "name": "lamm/lamm-core",
-    "description": "ZF2 Module cdn",
+    "description": "ZF2 Module Core",
     "type": "library",
     "keywords": [
         "zf2",
