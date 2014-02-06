@@ -25,7 +25,7 @@
             "LammCore": "src/"
         },
         "classmap": [
-            "./"
+            "./Module.php"
         ]
     }
 }

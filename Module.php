@@ -2,9 +2,9 @@
 
 namespace LammCore;
 
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\Mvc\ModuleRouteListener;
-
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface,
+    Zend\Mvc\ModuleRouteListener,
+    Zend\EventManager\Event;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -12,11 +12,8 @@ class Module implements AutoloaderProviderInterface
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . str_replace('\\', '/',
-                        __NAMESPACE__),
-                ),
+            'Zend\Loader\ClassMapAutoloader' => array(
+                __DIR__ . '/autoload_classmap.php',
             ),
         );
     }
@@ -26,15 +23,40 @@ class Module implements AutoloaderProviderInterface
         return include __DIR__ . '/config/module.config.php';
     }
 
-    public function onBootstrap($e)
+    public function onBootstrap(Event $event)
     {
-        // You may not need to do this if you're doing it elsewhere in your
-        // application
-        $eventManager = $e->getApplication()->getEventManager();
+        $eventManager = $event->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+        $config = $event->getApplication()->getConfig();
+        if(isset($config['core']['php']['settings'])) {
+            $settings    = $config['core']['php']['settings'];
+            if(is_array($settings)) {
+                foreach($settings as $key => $value) {
+                    ini_set($key, $value);
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @author L. Mayta <slovacus@gmail.com>
+     *
+     */
+    public function getControllerConfig()
+    {
+        return array(
+            'initializers' => array(
+                function ($instance, $sm) {
+                    if ($instance instanceof ConfigAwareInterface) {
+                        $locator = $sm->getServiceLocator();
+                        $config = $locator->get('Config');
+                        $instance->setConfig($config);
+                    }
+                }
+        )
+        );
     }
 
 }
-
-
